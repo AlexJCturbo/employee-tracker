@@ -31,4 +31,5 @@ VALUES
 ('Robert', 'Medvedev', 7, 6),
 ('Jacob', 'Murphy', 8, NULL),
 ('Sophia', 'Smorodina', 9, 1),
-('Mila', 'Cameron', 10, 9);
+('Mila', 'Cameron', 10, 9),
+('Donna', 'Lewis', 10, 9);
