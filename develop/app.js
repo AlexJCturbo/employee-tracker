@@ -1,3 +1,6 @@
+// const express = require('express');
+// const router = express.Router();
+// const db = require('../db/connection');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
 const department = require('../routes/apiRoutes/departmentRoutes')
@@ -21,17 +24,19 @@ EMPLOYEE MANAGER APPLICATION
       'Add a department',
       'Add a role',
       'Add an employee',
-      'Update employee role'
+      'Update employee role',
+      'Exit'
     ]
   })
-  // .then(selection => {
-  //   console.log(selection.menu);
+  .then(selection => {
+    console.log(selection.menu);
   //   if (selection.menu === 'View all departments') {
-  //     this.department();
+  //     this.department(router.get());
   //   }
   // })
 
 
 };
 
-employeeTrackerApp();
+
+//module.exports = employeeTrackerApp();
