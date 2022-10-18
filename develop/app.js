@@ -33,7 +33,7 @@ EMPLOYEE MANAGER APPLICATION
   //   if (selection.menu === 'View all departments') {
   //     this.department(router.get());
   //   }
-  // })
+  })
 
 
 };
