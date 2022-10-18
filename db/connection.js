@@ -4,8 +4,8 @@ const db = mysql.createConnection(
   {
   host: 'localhost',
   user: 'root',
-  password: 'Luz3%E&NB/x.ENS',
-  database: 'employee_tracker'
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
   },
   console.log('Connected to the employee tracker database.')
 );
