@@ -1,4 +1,4 @@
-INSERT INTO department (name)
+INSERT INTO departments (name)
 VALUES
 ('Engineering'),
 ('Finance'),
@@ -6,7 +6,7 @@ VALUES
 ('Legal'),
 ('Marketing');
 
-INSERT INTO role (title, salary, department_id)
+INSERT INTO roles (title, salary, department_id)
 VALUES
 ('Operations Manager', 210000, 1),
 ('Account Manager', 155000, 2),
@@ -19,7 +19,7 @@ VALUES
 ('Marketing Lead', 150000, 5),
 ('Marketing analyst', 90000, 5);
 
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
+INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES
 ('Thomas', 'Brown', 1, NULL),
 ('Katya', 'Andrews', 2, NULL),
@@ -28,7 +28,7 @@ VALUES
 ('Alex', 'Castillo', 5, 4),
 ('Victor', 'Chan', 5, 4),
 ('Emma', 'Lourd', 6, 1),
-('Robert', 'Medvedev', 7, 6),
+('Robert', 'Medvedev', 7,6),
 ('Jacob', 'Murphy', 8, NULL),
 ('Sophia', 'Smorodina', 9, 1),
 ('Mila', 'Cameron', 10, 9),
