@@ -2,9 +2,9 @@ const db = require('../db/connection');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
 
-const {viewDepartments, addDepartment} = require('../lib/departmentFunctions');
-const {viewRoles, addRole} = require('../lib/roleFunctions');
-const {viewEmployees, addEmployee} = require('../lib/employeeFunctions');
+const {viewDepartments} = require('../lib/departmentFunctions');
+const {viewRoles} = require('../lib/roleFunctions');
+const {viewEmployees} = require('../lib/employeeFunctions');
 
 const menuOptions = [{
     type: 'list',
@@ -41,7 +41,7 @@ const getNewDepartment = () => {
   ])
     .then((answer) => {
       const sqlAddD = `INSERT INTO departments (name)
-    VALUES (?);`;
+                      VALUES (?);`;
       const params = [answer.newDepartment];
 
       db.query(sqlAddD, params, (err, res) => {
@@ -58,6 +58,21 @@ Added ${answer.newDepartment} to the database.`
       setTimeout(employeeTrackerApp, 1500);
     })
 };
+
+// function newDepartment(){
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//        resolve(addDepartment())
+//     }, 500)
+// })
+// };
+// async function getNewDepartment(){
+//   await newDepartment()
+//   .then(()=> {
+//     viewDepartments()
+//     setTimeout(employeeTrackerApp, 1500);
+//   })
+// };
 
 //Adding a role
 const getNewRole = () => {
@@ -91,12 +106,11 @@ const getNewRole = () => {
     .then((answers) => {
       const newRole = answers.newRole;
       const newSalary = answers.newSalary;
-
       const sqlViewD = `SELECT id, name FROM departments;`;
+
       db.query(sqlViewD, (err, res) => {
         if (err) throw err;
         const allDepartments = [];
-
         inquirer.prompt([
           {
             type: 'list',
@@ -168,10 +182,10 @@ const getNewEmployee = () => {
       const firstName = answers.firstName;
       const lastName = answers.lastName;
       const sqlViewR = `SELECT id, title FROM roles;`;
+
       db.query(sqlViewR, (err, res) => {
         if (err) throw err;
         const allRoles = [];
-
         inquirer.prompt([
           {
             type: 'list',
@@ -189,10 +203,10 @@ const getNewEmployee = () => {
             const employeeRole = responseRole.employeeRole;
             let extractRoleId = employeeRole.substr(0,2);
             const sqlViewE = `SELECT id, first_name, last_name FROM employees;`;
+
             db.query(sqlViewE, (err, res) => {
               if (err) throw err;
               const possibleManagers = [];
-
               inquirer.prompt([
                 {
                   type: 'list',
@@ -234,11 +248,10 @@ Added ${answers.firstName + ' ' + answers.lastName} to the database.`
 //Update employee Role
 const updateEmployeeRole = () => {
   const sqlViewE = `SELECT id, first_name, last_name FROM employees;`;
+
   db.query(sqlViewE, (err, res) => {
     if (err) throw err;
-
     const selectedEmployee = [];
-
     inquirer.prompt([
       {
         type: 'list',
@@ -256,10 +269,10 @@ const updateEmployeeRole = () => {
       const employeeToUpdate = responseEmployee.selectEmployee;
       let extractEmployeeId = employeeToUpdate.substr(0,2);
       const sqlViewR = `SELECT id, title FROM roles;`;
+
       db.query(sqlViewR, (err, res) => {
         if (err) throw err;
         const allRoles = [];
-
         inquirer.prompt([
           {
             type: 'list',
@@ -276,14 +289,8 @@ const updateEmployeeRole = () => {
         .then((responseRole) => {
           const employeeNewRole = responseRole.employeeRole;
           let extractRoleId = employeeNewRole.substr(0,2);
-
           const sqlUpdateR = `UPDATE employees SET role_id=? WHERE id=?;`;
           const params = [extractEmployeeId, extractRoleId];
-
-          console.log(params);
-          console.log(extractEmployeeId + ' ' + extractRoleId);
-          console.log(sqlUpdateR);
-
           db.query(sqlUpdateR, [extractRoleId, extractEmployeeId], err => {
             if(err) {
               throw err;
