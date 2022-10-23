@@ -113,7 +113,6 @@ const getNewRole = () => {
           .then((response) => {
             const newRoleDep = response.findDepartment;
             let extractId = newRoleDep.substr(0,2);
-            //console.log(newRole + "  " + newSalary + " " + extractId);
             const sqlAddR = `INSERT INTO roles (title, salary, department_id)
                           VALUES (?, ?, ?);`;
             const params = [newRole, newSalary, extractId];
@@ -128,21 +127,14 @@ Added ${answers.newRole} to the database.`
               );
               viewRoles();
               setTimeout(employeeTrackerApp, 1500);
-              // viewRoles();
-              // employeeTrackerApp();
             }
-              //viewRoles();
-              //employeeTrackerApp();
-            })
-
-            //employeeTrackerApp();
-          })
-      })
+            });
+          });
+      });
     });
 };
 
-
-//const employeeTrackerApp = () => {
+//Main function that runs the main menu with a switch
 function employeeTrackerApp() {
   inquirer.prompt(menuOptions)
     .then((selection) => {
