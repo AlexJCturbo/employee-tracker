@@ -112,10 +112,10 @@ const getNewRole = () => {
         ])
           .then((response) => {
             const newRoleDep = response.findDepartment;
-            let extractId = newRoleDep.substr(0,2);
+            let extractRoleId = newRoleDep.substr(0,2);
             const sqlAddR = `INSERT INTO roles (title, salary, department_id)
                           VALUES (?, ?, ?);`;
-            const params = [newRole, newSalary, extractId];
+            const params = [newRole, newSalary, extractRoleId];
 
             db.query(sqlAddR, params, (err, res) => {
               if (err) {
@@ -132,6 +132,174 @@ Added ${answers.newRole} to the database.`
           });
       });
     });
+};
+
+//Adding an employee
+const getNewEmployee = () => {
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'firstName',
+      message: "What is the employee's first name?",
+      validate: response => {
+        if (response) {
+          return true;
+        } else {
+          console.log("Please enter the employee's first name.");
+          return false;
+        }
+      }
+    },
+    {
+      type: 'input',
+      name: 'lastName',
+      message: "What is the employee's last name?",
+      validate: response => {
+        if (response) {
+          return true;
+        } else {
+          console.log("Please enter the employee's last name.");
+          return false;
+        }
+      }
+    },
+  ])
+    .then((answers) => {
+      const firstName = answers.firstName;
+      const lastName = answers.lastName;
+      const sqlViewR = `SELECT id, title FROM roles;`;
+      db.query(sqlViewR, (err, res) => {
+        if (err) throw err;
+        const allRoles = [];
+
+        inquirer.prompt([
+          {
+            type: 'list',
+            name: 'employeeRole',
+            message: "What is the employee's role?",
+            choices: function () {
+              for (i = 0; i < res.length; i++) {
+                allRoles.push(res[i].id + "  " + res[i].title);
+              }
+              return allRoles;
+            }
+          }
+        ])
+          .then((responseRole) => {
+            const employeeRole = responseRole.employeeRole;
+            let extractRoleId = employeeRole.substr(0,2);
+            const sqlViewE = `SELECT id, first_name, last_name FROM employees;`;
+            db.query(sqlViewE, (err, res) => {
+              if (err) throw err;
+              const possibleManagers = [];
+
+              inquirer.prompt([
+                {
+                  type: 'list',
+                  name: 'employeeManager',
+                  message: "Who is the employee's manager?",
+                  choices: function () {
+                    for (i = 0; i < res.length; i++) {
+                      possibleManagers.push(res[i].id + "  " + res[i].first_name + "  " + res[i].last_name);
+                    }
+                    return possibleManagers;
+                  }
+                }
+              ])
+              .then((responseManager) => {
+                const employeeManager = responseManager.employeeManager;
+                let extractManagerId = employeeManager.substr(0,2);
+                const sqlAddE = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+                VALUES (?, ?, ?, ?);`;
+                const params = [firstName, lastName, extractRoleId, extractManagerId];
+                db.query(sqlAddE, params, (err, res) => {
+                  if(err) {
+                    throw err;
+                  } else {
+                    console.log (`
+
+Added ${answers.firstName + ' ' + answers.lastName} to the database.`
+                    );
+                    viewEmployees();
+                    setTimeout(employeeTrackerApp, 1500);
+                  }
+                });
+              });
+            });
+          });
+      });
+    });
+};
+
+//Update employee Role
+const updateEmployeeRole = () => {
+  const sqlViewE = `SELECT id, first_name, last_name FROM employees;`;
+  db.query(sqlViewE, (err, res) => {
+    if (err) throw err;
+
+    const selectedEmployee = [];
+
+    inquirer.prompt([
+      {
+        type: 'list',
+        name: 'selectEmployee',
+        message: "Which employee's role do you want to update?",
+        choices: function () {
+          for (i = 0; i < res.length; i++) {
+            selectedEmployee.push(res[i].id + "  " + res[i].first_name + "  " + res[i].last_name);
+          }
+          return selectedEmployee;
+        }
+      }
+    ])
+    .then((responseEmployee) => {
+      const employeeToUpdate = responseEmployee.selectEmployee;
+      let extractEmployeeId = employeeToUpdate.substr(0,2);
+      const sqlViewR = `SELECT id, title FROM roles;`;
+      db.query(sqlViewR, (err, res) => {
+        if (err) throw err;
+        const allRoles = [];
+
+        inquirer.prompt([
+          {
+            type: 'list',
+            name: 'employeeRole',
+            message: "which role do you want to assign the selected employee?",
+            choices: function () {
+              for (i = 0; i < res.length; i++) {
+                allRoles.push(res[i].id + "  " + res[i].title);
+              }
+              return allRoles;
+            }
+          }
+        ])
+        .then((responseRole) => {
+          const employeeNewRole = responseRole.employeeRole;
+          let extractRoleId = employeeNewRole.substr(0,2);
+
+          const sqlUpdateR = `UPDATE employees SET role_id=? WHERE id=?;`;
+          const params = [extractEmployeeId, extractRoleId];
+
+          console.log(params);
+          console.log(extractEmployeeId + ' ' + extractRoleId);
+          console.log(sqlUpdateR);
+
+          db.query(sqlUpdateR, [extractRoleId, extractEmployeeId], err => {
+            if(err) {
+              throw err;
+            } else {
+              console.log (`
+
+Updated the employee's role.`
+              );
+              viewEmployees();
+              setTimeout(employeeTrackerApp, 1500);
+            }
+          });
+        });
+      });
+    });
+  });     
 };
 
 //Main function that runs the main menu with a switch
@@ -157,17 +325,12 @@ function employeeTrackerApp() {
         case 'Add a role':
           getNewRole();
           break;
-
-
         case 'Add an employee':
-          getNewRole();
+          getNewEmployee();
           break;
-
         case 'Update employee role':
-          getNewRole();
+          updateEmployeeRole();
           break;
-
-
         case "Exit":
           process.exit();
         default:
