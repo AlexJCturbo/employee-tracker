@@ -1,6 +1,5 @@
 const db = require('../db/connection');
 const inquirer = require('inquirer');
-const cTable = require('console.table');
 
 const {viewDepartments} = require('../lib/departmentFunctions');
 const {viewRoles} = require('../lib/roleFunctions');
@@ -18,6 +17,8 @@ const menuOptions = [{
       'Add a role',
       'Add an employee',
       'Update employee role',
+      'Update employee manager',
+      'Delete an employee',
       'Exit'
     ]
 }];
@@ -59,13 +60,15 @@ Added ${answer.newDepartment} to the database.`
     })
 };
 
+//Adding a department with async function
 // function newDepartment(){
 //   return new Promise((resolve, reject) => {
 //     setTimeout(() => {
-//        resolve(addDepartment())
+//        resolve(addDepartment)
 //     }, 500)
 // })
 // };
+
 // async function getNewDepartment(){
 //   await newDepartment()
 //   .then(()=> {
@@ -277,7 +280,7 @@ const updateEmployeeRole = () => {
           {
             type: 'list',
             name: 'employeeRole',
-            message: "which role do you want to assign the selected employee?",
+            message: "Which role do you want to assign the selected employee?",
             choices: function () {
               for (i = 0; i < res.length; i++) {
                 allRoles.push(res[i].id + "  " + res[i].title);
@@ -291,7 +294,8 @@ const updateEmployeeRole = () => {
           let extractRoleId = employeeNewRole.substr(0,2);
           const sqlUpdateR = `UPDATE employees SET role_id=? WHERE id=?;`;
           const params = [extractEmployeeId, extractRoleId];
-          db.query(sqlUpdateR, [extractRoleId, extractEmployeeId], err => {
+
+          db.query(sqlUpdateR, params, err => {
             if(err) {
               throw err;
             } else {
@@ -308,6 +312,112 @@ Updated the employee's role.`
     });
   });     
 };
+
+//Update employee Manager
+const updateEmployeeManager = () => {
+  const sqlViewE = `SELECT id, first_name, last_name FROM employees;`;
+
+  db.query(sqlViewE, (err, res) => {
+    if (err) throw err;
+    const selectedEmployee = [];
+    inquirer.prompt([
+      {
+        type: 'list',
+        name: 'selectEmployee',
+        message: "Which employee's manager do you want to update?",
+        choices: function () {
+          for (i = 0; i < res.length; i++) {
+            selectedEmployee.push(res[i].id + "  " + res[i].first_name + "  " + res[i].last_name);
+          }
+          return selectedEmployee;
+        }
+      }
+    ])
+    .then((responseEmployee) => {
+      const employeeToUpdate = responseEmployee.selectEmployee;
+      let extractEmployeeId = employeeToUpdate.substr(0,2);
+      const sqlViewM = `SELECT id, first_name, last_name FROM employees;`;
+
+      db.query(sqlViewM, (err, res) => {
+        if (err) throw err;
+        const newManager = [];
+        inquirer.prompt([
+          {
+            type: 'list',
+            name: 'employeeManager',
+            message: "Which employee do you want to assign as new manager?",
+            choices: function () {
+              for (i = 0; i < res.length; i++) {
+                newManager.push(res[i].id + "  " + res[i].first_name + "  " + res[i].last_name);
+              }
+              return newManager;
+            }
+          }
+        ])
+        .then((responseManager) => {
+          const employeeManager = responseManager.employeeManager;
+          let extractManagerId = employeeManager.substr(0,2);
+          const sqlUpdateM = `UPDATE employees SET manager_id=? WHERE id=?;`;
+          const params = [extractManagerId, extractEmployeeId];
+          
+          db.query(sqlUpdateM, params, err => {
+            if(err) {
+              throw err;
+            } else {
+              console.log (`
+
+Updated the employee's manager.`
+              );
+              viewEmployees();
+              setTimeout(employeeTrackerApp, 1500);
+            }
+          });
+        });
+      });
+    });
+  });
+};
+
+//Delete an employee
+const deleteEmployee = () => {
+  const sqlViewE = `SELECT id, first_name, last_name FROM employees;`;
+
+  db.query(sqlViewE, (err, res) => {
+    if (err) throw err;
+    const selectedEmployee = [];
+    inquirer.prompt([
+      {
+        type: 'list',
+        name: 'deleteEmployee',
+        message: "Which employee do you want to delete?",
+        choices: function () {
+          for (i = 0; i < res.length; i++) {
+            selectedEmployee.push(res[i].id + "  " + res[i].first_name + "  " + res[i].last_name);
+          }
+          return selectedEmployee;
+        }
+      }
+    ])
+    .then((responseEmployee) => {
+      const deleteEmployee = responseEmployee.deleteEmployee;
+      let extractEmployeeId = deleteEmployee.substr(0,2);
+      const sqlDeleteE = `DELETE FROM employees WHERE id = ?;`;
+
+      db.query(sqlDeleteE, [extractEmployeeId], err => {
+        if(err) {
+          throw err;
+        } else {
+          console.log (`
+
+Employee deleted successfully.`
+          );
+          viewEmployees();
+          setTimeout(employeeTrackerApp, 1500);
+        }
+      });
+    });
+  });
+}
 
 //Main function that runs the main menu with a switch
 function employeeTrackerApp() {
@@ -337,6 +447,12 @@ function employeeTrackerApp() {
           break;
         case 'Update employee role':
           updateEmployeeRole();
+          break;
+        case 'Update employee manager':
+          updateEmployeeManager();
+          break;
+        case 'Delete an employee':
+          deleteEmployee();
           break;
         case "Exit":
           process.exit();
