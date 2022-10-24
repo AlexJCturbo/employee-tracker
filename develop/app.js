@@ -292,7 +292,7 @@ const updateEmployeeRole = () => {
           const employeeNewRole = responseRole.employeeRole;
           let extractRoleId = employeeNewRole.substr(0,2);
           const sqlUpdateR = `UPDATE employees SET role_id=? WHERE id=?;`;
-          const params = [extractEmployeeId, extractRoleId];
+          const params = [extractRoleId, extractEmployeeId];
 
           db.query(sqlUpdateR, params, err => {
             if(err) {
