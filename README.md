@@ -62,7 +62,7 @@ Please, feel free to get in touch with me at any member of the development team 
 
 ## Links
 - [Application Repository](https://github.com/AlexJCturbo/employee-tracker)
-- [Walkthrough Video](https://drive.google.com/)
+- [Walkthrough Video](https://drive.google.com/file/d/1brN2VEGvNoIK7eezRBjZwGnOidEBxGaj/view?usp=sharing)
 ###### [Back to Index](#Table-of-Contents)
 
 
