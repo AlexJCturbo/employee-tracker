@@ -234,7 +234,6 @@ const getNewEmployee = () => {
                     throw err;
                   } else {
                     console.log (`
-
 Added ${answers.firstName + ' ' + answers.lastName} to the database.`
                     );
                     viewEmployees();
@@ -300,7 +299,6 @@ const updateEmployeeRole = () => {
               throw err;
             } else {
               console.log (`
-
 Updated the employee's role.`
               );
               viewEmployees();
@@ -365,7 +363,6 @@ const updateEmployeeManager = () => {
               throw err;
             } else {
               console.log (`
-
 Updated the employee's manager.`
               );
               viewEmployees();
@@ -408,7 +405,6 @@ const deleteEmployee = () => {
           throw err;
         } else {
           console.log (`
-
 Employee deleted successfully.`
           );
           viewEmployees();
