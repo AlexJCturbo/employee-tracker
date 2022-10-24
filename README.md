@@ -4,6 +4,8 @@
 
 - [Project Description](#Project-Description)
 - [User Story](#User-Story)
+- [Usage](#Usage)
+- [Screen Captures](#Screen-Captures)
 - [Technologies](#Technologies)
 - [Questions](#Questions)
 - [Links](#Links)
@@ -20,6 +22,32 @@ AS A business owner
 I WANT to be able to view and manage the departments, roles, and employees in my company
 SO THAT I can organize and plan my business
 ```
+###### [Back to Index](#Table-of-Contents)
+
+## Usage
+To run the Employee Tracker, the user must have Node.js installed. In addition,MySQL2, dotenv (to protect SQL passwords), Inquirer.js (version 8.2.4), and console.table must be installed in the directory of the project as follows:
+
+```
+$ npm init
+$ npm install --save mysql2
+$ npm i inquirer@8.2.4
+$ npm install console.table --save
+$ npm install dotenv --save
+```
+Then, clone this repo and in the .env file add the user and password of MySQL:
+```
+DB_USER = root
+DB_PASS = user_password
+```
+Then, from the command line run:
+```
+$ node index
+```
+###### [Back to Index](#Table-of-Contents)
+
+## Screen Captures
+![Employee Tracker 1](./assets/images/employee_tracker_01.png)
+![Employee Tracker 2](./assets/images/employee_tracker_02.png)
 ###### [Back to Index](#Table-of-Contents)
 
 ## Technologies
