@@ -35,12 +35,16 @@ $ npm i inquirer@8.2.4
 $ npm install console.table --save
 $ npm install dotenv --save
 ```
-Then, clone this repo and in the .env file add the user and password of MySQL:
+
+Then, in the .env file add the user and password of MySQL:
+
 ```
 DB_USER = root
 DB_PASS = user_password
 ```
+
 Then, from the command line run:
+
 ```
 $ node index
 ```
