@@ -25,7 +25,8 @@ SO THAT I can organize and plan my business
 ###### [Back to Index](#Table-of-Contents)
 
 ## Usage
-To run the Employee Tracker, the user must have Node.js installed. In addition,MySQL2, dotenv (to protect SQL passwords), Inquirer.js (version 8.2.4), and console.table must be installed in the directory of the project as follows:
+
+To run the Employee Tracker, the user must have Node.js installed. In addition,MySQL2, dotenv (to protect SQL passwords), Inquirer.js (version 8.2.4), and console.table must be installed in the directory of the project. To start using the Employee Tracker first clone this repo, then in the command line run the following commands to install the required packages:
 
 ```
 $ npm init
